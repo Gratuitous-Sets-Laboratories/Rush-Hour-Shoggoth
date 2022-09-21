@@ -3,7 +3,6 @@
  * for:           Rush Hour Live Escapses
  * by:            Matt Charles of Gratuitous Sets Laboratories
  * written:       01 March 2022
- * last revised:  08 April 2022
  * 
  */
 
@@ -68,7 +67,7 @@
   const int lMin = 325;
   const int lMax = 425;
 
-  const String myNameIs = "ShoggothEyeTargets3A 18-Jul-2022";
+  const String myNameIs = "ShoggothEyeTargets3B 21-Sept-2022";
   
 //============================================================//
 //============== SETUP =======================================//
@@ -139,6 +138,7 @@ void setup() {
 
   bool isMoving[4];                 // eye is currently in an animation sequense
   bool isShot[4];                   // eye has been shot
+  bool wasShot[4];
   byte lookFrame[4];                // frame number within the animation (out of 100)
   int lookXNew[4];                  // next X-coordinate (-100 to 100)
   int lookXOld[4];                  // prev X-coordinate (-100 to 100)
@@ -175,6 +175,7 @@ void loop() {
     loPulse = lMax;                                           // "
     for (int eye = 0; eye < 4; eye++){                        // for each of the four sets of eyes...
       updateServos(eye);                                      // update the servo positions for that eye
+      isShot[eye] = false;                                    // make sure that the eyes are alive
     }
   }
   
@@ -207,6 +208,14 @@ void loop() {
     }
     
 //-------------- TARGETS REACTIONS ---------------------------//
+    for (int eye = 0; eye < 4; eye++){                        // for each eye...
+      if (isShot[eye] && !wasShot[eye]){                      // if it has been shot since the last loop...
+        digitalWrite(relay1Pin, HIGH);                        // engage relay 1
+        delay(100);                                           // for 1/10th of a second
+        digitalWrite(relay1Pin,LOW);
+      }
+    }
+    
     bool allEyesShot = true;                                  // assume all targets have been hit
     for (int eye = 0; eye < 4; eye++){                        // for each of the 4 sets of eyes...
       if (!isShot[eye]){                                      // if that eye has not been hit...
@@ -215,13 +224,13 @@ void loop() {
     }
     if (allEyesShot){                                         // if all the targets have, in fact, been hit...
       digitalWrite (xOutPin, HIGH);                           // engage 12V output
-      digitalWrite (relay1Pin, HIGH);                         // engage relay
+//      digitalWrite (relay1Pin, HIGH);                         // engage relay
       digitalWrite (relay2Pin, HIGH);                         // "
       delay (deadDelay);                                      // pause the designated time
     }
     else {                                                    // otherwise...
       digitalWrite (xOutPin, LOW);                            // disengage 12V outpit
-      digitalWrite (relay1Pin, LOW);                          // disengage relay
+//      digitalWrite (relay1Pin, LOW);                          // disengage relay
       digitalWrite (relay2Pin, LOW);                          // "
     }
   }
