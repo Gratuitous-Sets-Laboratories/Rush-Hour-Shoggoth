@@ -67,7 +67,7 @@
   const int lMin = 325;
   const int lMax = 425;
 
-  const String myNameIs = "ShoggothEyeTargets3B 21-Sept-2022";
+  const String myNameIs = "ShoggothEyeTargets3C 28-Oct-2022";
   
 //============================================================//
 //============== SETUP =======================================//
@@ -107,7 +107,7 @@ void setup() {
   servoBar2.begin();                // "
   servoBar2.setPWMFreq(60);         // "
 
-  randomSeed(A7);                   // random seed for random eye motion (A7 is not used)
+  randomSeed(analogRead(A7));                   // random seed for random eye motion (A7 is not used)
 
   delay(100);                       // wait
 
